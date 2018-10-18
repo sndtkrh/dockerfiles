@@ -1,0 +1,20 @@
+FROM ubuntu:16.04
+
+RUN apt-get update \
+  && apt-get install --yes --no-install-recommends \
+    build-essential \
+    ca-certificates \
+    curl \
+    git \
+    libffi-dev \
+    libgmp-dev \
+    netbase \
+    software-properties-common \
+    sudo \
+    wget \
+    zlib1g-dev \
+  && rm -rf /var/lib/apt/lists/*
+
+ENV PATH $PATH:/root/.local/bin
+COPY install_stack.sh /tmp/
+RUN cd /tmp && sh install_stack.sh

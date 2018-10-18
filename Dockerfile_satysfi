@@ -1,0 +1,51 @@
+FROM ubuntu:16.04
+
+RUN apt-get update && \
+    apt-get install --yes --no-install-recommends \
+      autoconf \
+      build-essential \
+      bzip2 \
+      ca-cacert \
+      ca-certificates \
+      emacs \
+      git \
+      m4 \
+      opam \
+      unzip \
+      rsync \
+      ruby \
+      wget && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN opam init --comp=4.06.0 --yes \
+  && opam switch 4.06.0 \
+  && eval `opam config env`
+
+RUN opam repository add satysfi-external https://github.com/gfngfn/satysfi-external-repo.git && \
+    opam update
+
+RUN git clone https://github.com/gfngfn/SATySFi /root/SATySFi && \
+    mkdir -p /root/.satysfi && \
+    cp -r /root/SATySFi/lib-satysfi/dist /root/.satysfi/
+
+RUN mkdir -p /root/.satysfi/dist/fonts && \
+    wget http://mirrors.ctan.org/fonts/junicode/fonts/Junicode.ttf -P /root/.satysfi/dist/fonts && \
+    wget http://mirrors.ctan.org/fonts/junicode/fonts/Junicode-Italic.ttf -P /root/.satysfi/dist/fonts && \
+    wget https://oscdl.ipa.go.jp/IPAexfont/IPAexfont00301.zip -P /tmp && \
+    unzip -d /tmp /tmp/IPAexfont00301.zip && \
+    mv /tmp/IPAexfont00301/ipaexg.ttf /tmp/IPAexfont00301/ipaexm.ttf /root/.satysfi/dist/fonts && \
+    wget http://mirrors.ctan.org/fonts/lm/fonts/opentype/public/lm/lmsans10-regular.otf -P /root/.satysfi/dist/fonts/ && \
+    wget http://mirrors.ctan.org/fonts/lm/fonts/opentype/public/lm/lmmono10-regular.otf -P /root/.satysfi/dist/fonts/ && \
+    wget http://www.gust.org.pl/projects/e-foundry/lm-math/download/latinmodern-math-1959.zip && \
+    unzip latinmodern-math-1959.zip && \
+    cp ./latinmodern-math-1959/otf/latinmodern-math.otf /root/.satysfi/dist/fonts/ && \
+    rm latinmodern-math-1959.zip && \
+    rm -r latinmodern-math-1959
+
+WORKDIR /root/SATySFi
+    
+RUN git submodule update -i && \
+    opam pin add -y satysfi . && \
+    opam install -y satysfi
+
+RUN opam config env >> /root/.bashrc

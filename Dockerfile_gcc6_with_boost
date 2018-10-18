@@ -1,0 +1,33 @@
+# GCC 6
+FROM ubuntu:16.04
+
+RUN apt-get update \
+  && apt-get install --yes --no-install-recommends \
+    build-essential \
+    cmake \
+    emacs \
+    git \
+    software-properties-common
+
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test
+
+RUN apt-get update \
+  && apt-get install --yes --no-install-recommends \
+    gcc-6 \
+    g++-6 \
+  && rm -rf /var/lib/apt/lists/*
+
+ENV CC=/usr/bin/gcc-6
+ENV CXX=/usr/bin/g++-6
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-6
+
+# Install boost-1.67.0
+RUN git clone --recursive https://github.com/boostorg/boost.git \
+  && cd ./boost \
+  && git checkout -b v166 refs/tags/boost-1.67.0
+RUN cd /boost \
+  && ./bootstrap.sh \
+  && ./b2 toolset=gcc-6 --prefix=/usr/local -j2 \
+  && ./b2 install toolset=gcc-6 --prefix=/usr/local -j2 \
+  && cd / \
+  && rm -rf ./boost
