@@ -7,7 +7,9 @@ RUN apt-get update \
     cmake \
     emacs \
     git \
-    software-properties-common
+    software-properties-common \
+    ssh
+  && rm -rf /var/lib/apt/lists/*
 
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test
 
