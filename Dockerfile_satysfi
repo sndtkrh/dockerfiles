@@ -1,28 +1,38 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends \
       autoconf \
+      bubblewrap \
       build-essential \
       bzip2 \
       ca-cacert \
       ca-certificates \
+      curl \
+      darcs \
       emacs \
       git \
       m4 \
-      opam \
-      unzip \
+      mercurial \
       rsync \
       ruby \
+      ssh \
+      software-properties-common \
+      unzip \
       wget && \
     rm -rf /var/lib/apt/lists/*
 
-RUN opam init --comp=4.06.0 --yes \
+RUN add-apt-repository ppa:avsm/ppa \
+  && apt-get install --yes --no-install-recommends \
+    opam \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN opam init --comp 4.06.0 --disable-sandboxing \
   && opam switch 4.06.0 \
   && eval `opam config env`
 
-RUN opam repository add satysfi-external https://github.com/gfngfn/satysfi-external-repo.git && \
-    opam update
+RUN opam repository add satysfi-external https://github.com/gfngfn/satysfi-external-repo.git \
+  && opam update
 
 RUN git clone https://github.com/gfngfn/SATySFi /root/SATySFi && \
     mkdir -p /root/.satysfi && \
@@ -43,9 +53,9 @@ RUN mkdir -p /root/.satysfi/dist/fonts && \
     rm -r latinmodern-math-1959
 
 WORKDIR /root/SATySFi
-    
+
 RUN git submodule update -i && \
-    opam pin add -y satysfi . && \
-    opam install -y satysfi
+  opam pin add -y satysfi . && \
+  opam install -y satysfi
 
 RUN opam config env >> /root/.bashrc
