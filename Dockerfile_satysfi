@@ -40,17 +40,21 @@ RUN git clone https://github.com/gfngfn/SATySFi /root/SATySFi && \
 
 RUN mkdir -p /root/.satysfi/dist/fonts && \
     wget http://mirrors.ctan.org/fonts/junicode/fonts/Junicode.ttf -P /root/.satysfi/dist/fonts && \
+    wget http://mirrors.ctan.org/fonts/junicode/fonts/Junicode-Bold.ttf -P /root/.satysfi/dist/fonts && \
     wget http://mirrors.ctan.org/fonts/junicode/fonts/Junicode-Italic.ttf -P /root/.satysfi/dist/fonts && \
     wget https://oscdl.ipa.go.jp/IPAexfont/IPAexfont00301.zip -P /tmp && \
     unzip -d /tmp /tmp/IPAexfont00301.zip && \
     mv /tmp/IPAexfont00301/ipaexg.ttf /tmp/IPAexfont00301/ipaexm.ttf /root/.satysfi/dist/fonts && \
+    wget http://mirrors.ctan.org/fonts/lm/fonts/opentype/public/lm/lmroman10-regular.otf -P /root/.satysfi/dist/fonts/ && \
+    wget http://mirrors.ctan.org/fonts/lm/fonts/opentype/public/lm/lmroman10-bold.otf -P /root/.satysfi/dist/fonts/ && \
+    wget http://mirrors.ctan.org/fonts/lm/fonts/opentype/public/lm/lmroman10-italic.otf -P /root/.satysfi/dist/fonts/ && \
     wget http://mirrors.ctan.org/fonts/lm/fonts/opentype/public/lm/lmsans10-regular.otf -P /root/.satysfi/dist/fonts/ && \
     wget http://mirrors.ctan.org/fonts/lm/fonts/opentype/public/lm/lmmono10-regular.otf -P /root/.satysfi/dist/fonts/ && \
-    wget http://www.gust.org.pl/projects/e-foundry/lm-math/download/latinmodern-math-1959.zip && \
-    unzip latinmodern-math-1959.zip && \
-    cp ./latinmodern-math-1959/otf/latinmodern-math.otf /root/.satysfi/dist/fonts/ && \
-    rm latinmodern-math-1959.zip && \
-    rm -r latinmodern-math-1959
+    wget http://mirrors.ctan.org/fonts/lm-math.zip && \
+    unzip lm-math.zip && \
+    cp ./lm-math/opentype/latinmodern-math.otf /root/.satysfi/dist/fonts/ && \
+    rm lm-math.zip && \
+    rm -r lm-math
 
 WORKDIR /root/SATySFi
 
