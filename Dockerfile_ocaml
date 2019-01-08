@@ -1,0 +1,32 @@
+FROM ubuntu:18.04
+
+RUN apt-get update && \
+    apt-get install --yes --no-install-recommends \
+      autoconf \
+      build-essential \
+      bzip2 \
+      ca-cacert \
+      ca-certificates \
+      curl \
+      darcs \
+      git \
+      m4 \
+      mercurial \
+      rsync \
+      ruby \
+      ssh \
+      software-properties-common \
+      unzip \
+      wget && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN add-apt-repository ppa:avsm/ppa \
+  && apt-get install --yes --no-install-recommends \
+    opam \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN opam init --comp 4.06.0 --disable-sandboxing \
+  && opam switch 4.06.0 \
+  && eval `opam config env`
+
+RUN opam install core utop
