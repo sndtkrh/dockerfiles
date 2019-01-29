@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 RUN apt-get update \
   && apt-get install --yes --no-install-recommends \
@@ -16,5 +16,9 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 ENV PATH $PATH:/root/.local/bin
-COPY install_stack.sh /tmp/
-RUN cd /tmp && sh install_stack.sh
+
+RUN cd /tmp && \
+  curl -sSL https://get.haskellstack.org/ | sh && \
+  stack update && \
+  stack setup
+
